@@ -1,153 +1,106 @@
-# Nedobot game automatization
+"""
+route link renaming automation on Sharepoint
+"""
 
+import os
 from selenium import webdriver
+import autoit
 import random
-import telegram_send
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.alert import Alert
+
 import time
 
 # headless mode
-chromeOptions = Options()
-chromeOptions.headless = True
-driver = webdriver.Chrome(executable_path="C:\Program Files (x86)\chromedriver.exe", options=chromeOptions)
+# chromeOptions = Options()
+# chromeOptions.headless = True
+# driver = webdriver.Chrome(executable_path="C:\Program Files (x86)\chromedriver.exe", options=chromeOptions)
+# driver = webdriver.Chrome(executable_path=".\chromedriver.exe", options=chromeOptions)
 
 # unheadless mode
-# PATH = "C:\Program Files (x86)\chromedriver.exe"
+
+# PATH = ".\chromedriver.exe"
 # driver = webdriver.Chrome(PATH)
+
+options = Options()
+options.add_argument('start-maximized')
+
+driver = webdriver.Chrome(options=options, executable_path='.\chromedriver.exe')
+
 try:
-    driver.get("https://vk.com/im?sel=c105")
-    element = driver.find_element_by_id("email")
-    element.send_keys("37360978889")
 
-    element = driver.find_element_by_id("pass")
-    element.send_keys("Google24")
-    print(driver.title)
+    linkToRename = "http://repositorydoc.ced.it/portale/documeto/MP/641693/RoutingRules/Raggruppa%20per%20tipo%20di%20contenuto.aspx"
+    # # linkToRename = "https://Authorization: Basic aHR0cHdhdGNoOmZmZmY=@www.httpwatch.com/httpgallery/authentication/authenticatedimage/default.aspx"
+    driver.get(linkToRename)
+    time.sleep(5)
 
-    element = driver.find_element_by_class_name("login_button")
-    element.click()
+    os.system(r'".\Auth.exe"')
 
-    driver.implicitly_wait(5)
-
-    driver.find_element_by_css_selector("#l_msg > a > span.left_label.inl_bl").click()
-
-    driver.find_element_by_css_selector("#im_dialogs > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > li.nim-dialog._im_dialog._im_dialog_2000000105.nim-dialog_muted > div.nim-dialog--content > div").click()
-
-    def presentCapthcha():
-        driver.implicitly_wait(30)
-        list_of_elements = driver.find_element_by_css_selector("div.im-page--chat-body").text
+    index = 1
+    try:
+        # versiunea lucreaza WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[1]/td[4]'))).click()
+        # WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[1]/td[4]'))).click()
         time.sleep(1)
-        if list_of_elements.find('Funeral , наша система заподозрила автоматизацию') != -1:
-            # timeOfCapthcha = driver.find_element_by_class_name('_im_mess_link').text
-            # print("time capthcha: " + str(timeOfCapthcha))
-            telegram_send.send(messages=["Ooops...you have to enter captcha ^_^ "])
-            while True:
-                try:
-                    list_of_elements = driver.find_element_by_css_selector("div.im-page--chat-body").text
-                    if list_of_elements.find('Funeral , капча решена. Блокировка заработков снята') != -1:
-                    #timeSolved = driver.find_element_by_class_name('_im_mess_link').text
-                    # print("timeSolved: " + str(timeSolved))
-                        break
-                    else:
-                        time.sleep(5)
-                except:
-                    time.sleep(5)
+        print("Element found")
+    except:
+        print("Element not found")
 
-    while True:
-        # Fishing
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(2) > div:nth-child(1) > button"))).click()
-            time.sleep(1)
-        except:
-            telegram_send.send(messages=["Кнопка рыбалка не сработала"])
+    try:
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[1]/td[1]'))).click()
+        time.sleep(1)
+        print("Element found checkbox")
+    except:
+        print("Element not found checkbox"
+              "")
 
-        # Mine
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(2) > div:nth-child(2) > button"))).click()
-            time.sleep(1)
-        except:
-            telegram_send.send(messages=["Кнопка шахта не сработала"])
+    try:
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '// *[ @ id = "Ribbon.ListItem.Manage.EditProperties-Large"] / span[2]'))).click()
+        time.sleep(1)
+        print("Element found 1")
+    except:
+        print("Element not found 1")
 
-        # Hunter
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR,"#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(2) > div:nth-child(3) > button"))).click()
-            time.sleep(1)
-        except:
-            telegram_send.send(messages=["Кнопка охота не сработала"])
-
-        #collect water
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(3) > div:nth-child(1) > button"))).click()
-            time.sleep(1)
-        except:
-            telegram_send.send(messages=["Кнопка сбора воды не сработала"])
-
-        #polivka
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(3) > div:nth-child(2) > button"))).click()
-            time.sleep(1)
-        except:
-            telegram_send.send(messages=["Кнопка полива не сработала"])
-
-        #Urojay
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '//*[@id="_im_keyboard_container"]/div/div/div[1]/div[1]/div/div[1]/div/div[3]/div[3]/button'))).click()
-            time.sleep(1)
-        except:
-            print("урожай не сработал")
-
-        presentCapthcha()
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '//*[@id="_im_keyboard_container"]/div/div/div[1]/div[1]/div/div[1]/div/div[3]/div[4]/button'))).click()
-            time.sleep(1)
-        except:
-            print("кормежка не сработала")
+    time.sleep(2)
 
 
-        i = 0
-        while i < 10:
+    driver.switch_to.frame(2)
+    print("i swithed frame")
+    time.sleep(1)
+    inputElement = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#ctl00_PlaceHolderMain_targetLocationSection_ctl02_pathField_ctl00_TextField')))
+    valueElement = driver.find_element_by_xpath('//*[@id="ctl00_PlaceHolderMain_targetLocationSection_ctl02_pathField_ctl00_TextField"]').get_attribute("value")
 
-            myTimeValue = random.randrange(61, 72)
+    newLink = valueElement.replace('/MP2017/', '/MP/')
+    newLink = newLink.replace('Conversione Dati', 'Conversione')
+    print("new link: " + newLink)
 
-            print("Next work after: " + str(myTimeValue) + " seconds")
-            time.sleep(myTimeValue)
+    #delete old value input field
+    inputElement.send_keys(Keys.BACK_SPACE)
+    inputElement.send_keys(Keys.CONTROL + "a")
+    inputElement.send_keys(Keys.DELETE)
 
-            i += 1
-            presentCapthcha()
-            try:
-                WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(1) > div:nth-child(1) > button"))).click()
-                driver.implicitly_wait(50)
-                time.sleep(1)
-            except:
-                telegram_send.send(messages=["Кнопка работы не сработала"])
+    inputElement.send_keys(newLink)
 
-            presentCapthcha()
+    print("Element found input")
 
-            if 0 == i % 2:
-                try:
-                    WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "#_im_keyboard_container > div > div > div.ui_scroll_overflow > div.ui_scroll_outer > div > div.ui_scroll_content.clear_fix > div > div:nth-child(1) > div:nth-child(2) > button"))).click()
-                except:
-                    telegram_send.send(messages=["Кнопка гонки не сработала"])
+    time.sleep(2)
+    try:
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '// *[ @ id = "ctl00_PlaceHolderMain_ctl00_RptControls_buttonOkUpdateRule"]'))).click()
+        time.sleep(1)
+        print("Element OK BUTTON")
+    except:
+        print("Element OK BUTTON")
 
-            print("For full farm remained " + str(i) + " of 10 works")
-except:
+
+
+
+
+except Exception as e:
+    print(e)
     print("Я вышел с ошибкой")
     driver.quit()
 
