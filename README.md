@@ -16,6 +16,15 @@ Install the dependencies:
 ```sh
 pip install -r requirements.txt
 ```
+## Download ChromeDriver for your Chrome version:
+
+Open Chrome browser -> Help -> About -> watch your current version of Chrome
+
+If your version not equal 89 download chromedriver for your version in the bottom menu and extract chromedriver.exe in project folder. 
+
+| Chrome Driver | Link to download |
+| ------ | ------ |
+| WebDriver | https://www.autoitscript.com/site/autoit/downloads/|
 
 ## Requirement tool!
 
@@ -44,13 +53,17 @@ When AutoIT tool installed on your desktop open Auth.au3 file with AutoIt Editor
 
 ![](./Screenshots/Screenshot_4.png)
 
+* Add Requirement Replacing Strings OLD -> NEW
+![](./Screenshots/Screenshot_5.png)
+
+
 * Run script...
 
 ```sh
 python main.py
 ```
 
-###**Don't minimize or close browser until the user is authenticated!**
+### **Don't minimize or close browser until the user is authenticated!**
 
 - ✨Magic ✨
 
