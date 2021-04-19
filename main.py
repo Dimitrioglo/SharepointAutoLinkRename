@@ -20,7 +20,7 @@ driver = webdriver.Chrome(options=options, executable_path=PATH)
 
 try:
     # Link alla pagina per la modifica dei percorsi
-    linkToRename = "http://repositorydoc.ced.it/portale/documeto/PS/651172/RoutingRules/Raggruppa%20per%20tipo%20di%20contenuto.aspx"
+    linkToRename = "http://repositorydoc.ced.it/portale/documeto/MP/641693/RoutingRules/Raggruppa%20per%20tipo%20di%20contenuto.aspx"
     driver.get(linkToRename)
     time.sleep(3)
 
@@ -42,13 +42,11 @@ try:
 
         # Elemento CheckBox
         try:
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]')))
-            time.sleep(1)
 
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 20).until(
                 EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]'))).click()
-            time.sleep(1)
         except:
             print("Errore su click CheckBox dal elemento!")
             break
@@ -61,8 +59,6 @@ try:
         except:
             print("Errore su click Bottone Modifica elemento!")
             break
-
-        time.sleep(2)
 
         # Gestione elemento iframe
         try:
@@ -85,7 +81,7 @@ try:
                 "value")
 
             # Replace i valori di percorso
-            newLink = valueElement.replace('/PS2017/', '/PS/')
+            newLink = valueElement.replace('/MP2017/', '/MP/')
             # Replace opzione aggiuntiva
             newLink = newLink.replace('Conversione Dati', 'Conversione')
 
@@ -114,7 +110,7 @@ try:
     if index > maxValueInt:
         print("Il programma è terminato elaborazione. Controlla sul sito web se tutto ha funzionato correttamente")
 
-    driver.quit()
+    # driver.quit()
 
 except Exception as e:
     print("Il programma è terminato con un errore: " + str(e))
