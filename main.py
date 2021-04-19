@@ -20,8 +20,7 @@ driver = webdriver.Chrome(options=options, executable_path=PATH)
 
 try:
     # Link alla pagina per la modifica dei percorsi
-    linkToRename = "http://repositorydoc.ced.it/portale/documeto/PS/651172/RoutingRules/Raggruppa%20per%20tipo%20di" \
-                   "%20contenuto.aspx "
+    linkToRename = "http://repositorydoc.ced.it/portale/documeto/PS/651172/RoutingRules/Raggruppa%20per%20tipo%20di%20contenuto.aspx"
     driver.get(linkToRename)
     time.sleep(3)
 
@@ -35,25 +34,16 @@ try:
         maxValueInt = int(maxValue.replace('(', '').replace(')', '').strip())
         time.sleep(1)
     except:
-        print("Errore non e trovato numero max dei elementi!")
+        print("Errore non e stato trovato numero max dei elementi!")
 
     # Index per iterazione sugli elementi
     index = 1
     while index <= maxValueInt:
 
-        # Rimuovere il commento se il primo elemento Checkbox di controllo non funziona
-        # if index == 1:
-        #     #Click link area "Percorso di destinazione"
-        #     try:
-        #         WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[4]'))).click()
-        #         time.sleep(1)
-        #     except:
-        #         print("Errore click su link area Percorso di destinazione!")
-
         # Elemento CheckBox
         try:
             WebDriverWait(driver, 20).until(
-                EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]'))).click()
+                EC.presence_of_element_located((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]'))).click()
             time.sleep(1)
         except:
             print("Errore su click CheckBox dal elemento!")
@@ -61,35 +51,20 @@ try:
 
         # Bottone Modifica elemento
         try:
-            WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+            WebDriverWait(driver, 20).until(EC.presence_of_element_located(
                 (By.XPATH, '// *[ @ id = "Ribbon.ListItem.Manage.EditProperties-Large"] / span[2]'))).click()
             time.sleep(2)
         except:
             print("Errore su click Bottone Modifica elemento!")
             break
 
-        time.sleep(5)
-
-
-        def frame_available_check(frame_reference):
-            """Verifica se elemento iframe esiste nella pagina ciclo ricorsivo."""
-
-            def callback(driver):
-                try:
-                    driver.switch_to.frame(frame_reference)
-                except NoSuchFrameException:
-                    return False
-                else:
-                    return True
-
-            return callback
-
+        time.sleep(2)
 
         # Gestione elemento iframe
         try:
-            WebDriverWait(driver, timeout=20).until(frame_available_check(2))
+            WebDriverWait(driver, timeout=20).until(EC.frame_to_be_available_and_switch_to_it(2))
         except:
-            print("Non e trovato elemento iframe!")
+            print("Non e stato trovato elemento iframe!")
             break
 
         time.sleep(1)
@@ -132,7 +107,7 @@ try:
         print("Elemento " + str(index) + " di " + str(maxValueInt) + " modificato ")
         index += 1
 
-    if index == maxValueInt:
+    if index > maxValueInt:
         print("Il programma è terminato elaborazione. Controlla sul sito web se tutto ha funzionato correttamente")
 
     driver.quit()
