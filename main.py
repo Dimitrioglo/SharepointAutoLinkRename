@@ -40,38 +40,53 @@ try:
     index = 1
     while index <= maxValueInt:
 
-        # Elemento CheckBox
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]')))
-            time.sleep(1)
+        def SelectElement(index):
+            # Elemento CheckBox
+            try:
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]')))
+                time.sleep(1)
 
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]'))).click()
-            time.sleep(1)
-        except:
-            print("Errore su click CheckBox dal elemento!")
-            break
+                WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, '//tbody[5]/tr[' + str(index) + ']/td[1]'))).click()
+                time.sleep(1)
+            except:
+                print("Errore su click CheckBox dal elemento!")
 
-        # Bottone Modifica elemento
-        try:
-            WebDriverWait(driver, 20).until(EC.presence_of_element_located(
-                (By.XPATH, '// *[ @ id = "Ribbon.ListItem.Manage.EditProperties-Large"] / span[2]'))).click()
-            time.sleep(2)
-        except:
-            print("Errore su click Bottone Modifica elemento!")
-            break
+            # Bottone Modifica elemento
+            try:
+                WebDriverWait(driver, 10).until(EC.presence_of_element_located(
+                    (By.XPATH, '// *[ @ id = "Ribbon.ListItem.Manage.EditProperties-Large"] / span[2]')))
 
-        time.sleep(2)
+                WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
+                    (By.XPATH, '// *[ @ id = "Ribbon.ListItem.Manage.EditProperties-Large"] / span[2]'))).click()
+                time.sleep(2)
+            except:
+                print("Errore su click Bottone Modifica elemento!")
 
-        # Gestione elemento iframe
-        try:
-            WebDriverWait(driver, timeout=20).until(EC.frame_to_be_available_and_switch_to_it(2))
-        except:
-            print("Non e stato trovato elemento iframe!")
-            break
+        SelectElement(index)
 
-        time.sleep(1)
+        def FindIframe(index):
+            # Gestione elemento iframe
+            try:
+                WebDriverWait(driver, timeout=20).until(EC.frame_to_be_available_and_switch_to_it(2))
+                return True
+            except:
+                SelectElement(index)
+                return False
+
+        callIndex = 0
+
+        while callIndex < 2:
+
+            if FindIframe(index):
+                break
+            else:
+                callIndex += 1
+
+            if callIndex == 2:
+                print("Non e stato trovato elemento iframe!")
+
 
         # Elemento input
         try:
