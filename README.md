@@ -24,7 +24,7 @@ If your version not equal 89 download chromedriver for your version in the botto
 
 | Chrome Driver | Link to download |
 | ------ | ------ |
-| WebDriver | https://www.autoitscript.com/site/autoit/downloads/|
+| WebDriver | https://chromedriver.chromium.org/downloads
 
 ## Requirement tool!
 
